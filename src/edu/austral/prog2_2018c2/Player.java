@@ -9,7 +9,7 @@ public class Player extends Sprite implements Commons {
     private  int puntos;
     private final int START_Y = 280;
     private final int START_X = 270;
-    private int vidas;
+    public int vidas=3;
     private final String playerImg = "src/images/player.png";
     private int width;
     private int escudos;
@@ -23,7 +23,7 @@ public class Player extends Sprite implements Commons {
 
     private void initPlayer() {
         ganoElNivel = false;
-        vidas = 3;
+
         escudos = 4;
         initPorcentajeEscudo();
         ImageIcon ii = new ImageIcon(playerImg);
@@ -124,32 +124,32 @@ public class Player extends Sprite implements Commons {
 
     @Override
     public void setDying(boolean dying) {
-        disparosRecibidos +=1;
+        disparosRecibidos += 1;
 
-        if (getEscudo()<=0) {
+        if (getEscudo() <= 0) {
             restarVidas();
-        }else{
+        } else {
 
         }
 
-        if (disparosRecibidos >= 5 ){
+        if (disparosRecibidos >= 5) {
             disparosRecibidos = 0;
-            porcentajeEscudo= porcentajeEscudo -10;
-           if (getPorcentajeEscudo() <=0)
-           {
+            porcentajeEscudo = porcentajeEscudo - 10;
+            if (getPorcentajeEscudo() <= 0) {
 
-               initPorcentajeEscudo();
-               restarEscudo();
+                initPorcentajeEscudo();
+                restarEscudo();
 
-           }
+            }
         }
 
 
-        if (getVidas() <=0){
+        if (getVidas() <= 0) {
             super.setDying(true);
         }
 
     }
+
     public void restarEscudo(){
         escudos=escudos-1;
 

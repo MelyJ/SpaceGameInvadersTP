@@ -32,6 +32,8 @@ public class Board extends JPanel implements Runnable, Commons {
     private boolean ingame = true;
     private final String explImg = "src/images/explosion.png";
     private String message = "Game Over";
+    private String message2 = "Game Won!!!!!";
+    private  Alien alienAux;
 
     private Thread animator;
 
@@ -161,6 +163,9 @@ public class Board extends JPanel implements Runnable, Commons {
         if (ingame) {
 
             g.drawLine(0, GROUND, BOARD_WIDTH, GROUND);
+            g.drawString("Vida:" + player.vidas ,5,18);
+            g.drawString("Puntos:" + player.getPuntos(),280,18);
+            g.drawString("Escudos:" + player.getEscudo(),580,18);
             drawAliens(g);
             drawPlayer(g);
             drawShot(g);
@@ -192,15 +197,16 @@ public class Board extends JPanel implements Runnable, Commons {
                 BOARD_WIDTH / 2);
     }
 
+
     public void animationCycle() {
 
         if (deaths == NUMBER_OF_ALIENS_TO_DESTROY) {
-       // if (deaths == 3){
+       //if (deaths == 3){
 
             player.ganoElNivel(true);
             //ingame = false;
             deaths = 0;
-            message = "Game Won!";
+
         }
 
         // player
@@ -286,8 +292,9 @@ public class Board extends JPanel implements Runnable, Commons {
                 int y = alien.getY();
 
                 if (y > GROUND - ALIEN_HEIGHT) {
-                    ingame = false;
+                    //ingame = false;
                     message = "Invasion!";
+                    game.esInvasion(player);
                 }
 
                 alien.act(direction);
@@ -350,7 +357,7 @@ public class Board extends JPanel implements Runnable, Commons {
         beforeTime = System.currentTimeMillis();
         Random rand = new Random();
         randomUfo = rand.nextInt((60-45)+1)+45;
-        Iterator it;
+        int cantidadIntentos = 0;
         boolean cambioAUfo = false;
         while (/*ingame &&*/ !player.isDying() /*&& game.*/ && ! game.isGameWon()) {
             if (player.ganoElNivel())
@@ -368,16 +375,21 @@ public class Board extends JPanel implements Runnable, Commons {
             if (sleep < 0) {
                 sleep = 2;
             }
-            if(beforeTimeUfo+randomUfo >=System.currentTimeMillis() ){
-                it = aliens.iterator();
+            if( System.currentTimeMillis() >= beforeTimeUfo+randomUfo * 1000  ){
+
                 cambioAUfo = false;
-                while (it.hasNext() && !cambioAUfo)
+                beforeTimeUfo = System.currentTimeMillis();
+                randomUfo = rand.nextInt((60-45)+1)+45;
+                cantidadIntentos = 0;
+                while (!cambioAUfo && cantidadIntentos < 5)
                 {
-                    if(! ( (Alien) it.next()).isUfo()){
-                        ( (Alien) it.next()).setUfo(true);
+                    alienAux = aliens.get(rand.nextInt((23)+1));
+
+                    if(!alienAux.isUfo()){
+                        alienAux.setUfo(true);
                         cambioAUfo = true;
                     }
-
+                    cantidadIntentos++;
                 }
             }
             try {
@@ -388,9 +400,16 @@ public class Board extends JPanel implements Runnable, Commons {
 
             beforeTime = System.currentTimeMillis();
         }
-
+        if(game.isGameWon()){
+            message = "game won";
+        }else {
+            if (game.isInvasion())
+                message= "Invasion";
+            else
+                message = "game over";
+        }
         gameOver();
-    }
+        }
 
     private class TAdapter extends KeyAdapter {
 
@@ -420,4 +439,5 @@ public class Board extends JPanel implements Runnable, Commons {
             }
         }
     }
-}
+        }
+

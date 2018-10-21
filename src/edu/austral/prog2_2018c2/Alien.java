@@ -38,6 +38,7 @@ public class Alien extends Sprite {
 
     public void setUfo(boolean estado){
         ufo = estado;
+        setImageAlien();
 
     }
 

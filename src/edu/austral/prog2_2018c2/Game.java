@@ -6,9 +6,11 @@ public class Game implements Commons {
 
     protected int level;
     private final int  maxLevel = 5;
+    protected  boolean invasion ;
 
     public Game() {
         level = 1;
+        invasion = false;
     }
 
     public void nextLevel(Player player){
@@ -18,10 +20,11 @@ public class Game implements Commons {
     }
 
     public int getLevel() {
+
         return level;
     }
     public boolean isGameWon(){
-        return level > maxLevel;
+        return level >maxLevel;
     }
     public int getshotFrecuency()
     {
@@ -31,4 +34,16 @@ public class Game implements Commons {
        return DELAY - timeDiff-level*2;
 
     }
+
+    public void esInvasion(Sprite player)
+    {
+        invasion = true;
+        player.setDying(true);
+    }
+
+    public boolean isInvasion(){
+        return  invasion;
+    }
+
 }
+// problemas con la imagen ufo,haecr tablero y el escudo y reiniciar el juego
