@@ -1,7 +1,5 @@
 package edu.austral.prog2_2018c2;
 
-import javax.swing.ImageIcon;
-
 public class Game implements Commons {
 
     protected int level;
@@ -16,7 +14,7 @@ public class Game implements Commons {
     public void nextLevel(Player player){
         level++;
         player.nextLevel();
-        player.ganoElNivel(false);
+        player.isGameWon(false);
     }
 
     public int getLevel() {
@@ -35,7 +33,7 @@ public class Game implements Commons {
 
     }
 
-    public void esInvasion(Sprite player)
+    public void isInvasion(Sprite player)
     {
         invasion = true;
         player.setDying(true);
@@ -46,4 +44,4 @@ public class Game implements Commons {
     }
 
 }
-// problemas con la imagen ufo,haecr tablero y el escudo y reiniciar el juego
+// hacer tablero y el escudo y reiniciar el juego
