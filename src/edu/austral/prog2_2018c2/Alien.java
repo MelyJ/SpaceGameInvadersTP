@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Alien extends Sprite {
     protected boolean ufo;
-    protected int puntos;
+    protected int points;
     private Bomb bomb;
     protected String alienImg = "src/images/alien.png";
     protected String ufoImg = "src/images/UfoAlien.png";
@@ -20,9 +20,10 @@ public class Alien extends Sprite {
         this.x = x;
         this.y = y;
         bomb = new Bomb(x, y);
-        puntos = 10;
+        this.points = 10;
         setImageAlien();
     }
+
     protected void setImageAlien(){
         String imagenAlien = alienImg;
         if(ufo){
@@ -36,8 +37,8 @@ public class Alien extends Sprite {
         return ufo;
     }
 
-    public void setUfo(boolean estado){
-        ufo = estado;
+    public void setUfo(boolean state){
+        ufo = state;
         setImageAlien();
 
     }
@@ -51,15 +52,19 @@ public class Alien extends Sprite {
 
         return bomb;
     }
-    public int getPuntos(){
+    public int getPoints(){
         if(ufo){
             Random rand = new Random();
             return rand.nextInt((300-50)+1)+50;
 
         }else{
-            return puntos;
+            return points;
         }
+
+
     }
+
+
 
     public class Bomb extends Sprite {
 
