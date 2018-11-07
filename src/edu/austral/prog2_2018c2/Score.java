@@ -1,43 +1,28 @@
 package edu.austral.prog2_2018c2;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.SplittableRandom;
 
-public class Score {
+public class Score implements Serializable {
 
-    String name;
-    int point;
-    String date;
+
+    ArrayList<Player> players;
+
 
     public Score() {
+players = new ArrayList<Player>();
+    }
+    public void setPlayer(Player player){
+       if(  players.contains(player)){
+           players.get(players.indexOf(player)).setPoints(player.getPoints());
 
+       }else{
+           players.add(player);
+       }
+       RankingFile.escribir(this);
     }
 
-    public String getDate() {
-        return date;
-    }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public int getPoint() {
-        return point;
-    }
-
-    public void setPoint(int point) {
-        this.point = point;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPoint(Serializable next) {
-
-    }
 }
+//falta ranking 10 jugadores

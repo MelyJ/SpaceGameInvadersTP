@@ -5,10 +5,12 @@ public class Game implements Commons {
     protected int level;
     private final int  maxLevel = 5;
     protected  boolean invasion ;
+    protected Score score;
 
     public Game() {
         level = 1;
         invasion = false;
+        score = RankingFile.leer();
     }
 
     public void nextLevel(Player player){
@@ -26,8 +28,10 @@ public class Game implements Commons {
     }
     public int getshotFrecuency()
     {
+
         return 15-level;
     }
+
     public long getInvadersVelocity(Long timeDiff){
        return DELAY - timeDiff-level*2;
 
@@ -41,6 +45,9 @@ public class Game implements Commons {
 
     public boolean isInvasion(){
         return  invasion;
+    }
+    public  void setScore(Player player){
+        score.setPlayer(player);
     }
 
 }

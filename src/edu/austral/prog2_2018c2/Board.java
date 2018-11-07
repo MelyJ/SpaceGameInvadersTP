@@ -1,7 +1,5 @@
 package edu.austral.prog2_2018c2;
-//196
-//168
-//404
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -60,7 +58,8 @@ public class Board extends JPanel implements Runnable, Commons {
         super.addNotify();
         gameInit();
     }
-    public void initAliens(){
+    public void
+    initAliens(){
 
         aliens = new ArrayList<>();
         Random rand = new Random();
@@ -90,13 +89,13 @@ public class Board extends JPanel implements Runnable, Commons {
         initAliens();
         player = new Player();
         shot = new Shot();
-
+        game = new Game();
         if (animator == null || !ingame) {
 
             animator = new Thread(this);
             animator.start();
         }
-        game = new Game();
+
     }
 
     public void drawAliens(Graphics g) {
@@ -196,6 +195,7 @@ public class Board extends JPanel implements Runnable, Commons {
         g.setFont(small);
         g.drawString(message + "\n Score:" + player.getPoints() , (BOARD_WIDTH - metr.stringWidth(message)) / 2,
                 BOARD_WIDTH / 2);
+        
     }
 
 
@@ -347,7 +347,7 @@ public class Board extends JPanel implements Runnable, Commons {
             }
         }
         System.out.println("Cant escudos:" + player.getShield() + "; Porcentaje escudos: " + player.getShieldPercentage() +
-                "; Disparos recibidos:" + player.getShotsReceived() + "; Cant vidas:" +  player.getLives() + "; Nivel: " + game.getLevel());
+               "; Disparos recibidos:" + player.getShotsReceived() + "; Cant vidas:" +  player.getLives() + "; Nivel: " + game.getLevel());
     }
 
     @Override
@@ -360,7 +360,9 @@ public class Board extends JPanel implements Runnable, Commons {
         randomUfo = rand.nextInt((60-45)+1)+45;
         int numberOfTries;
         boolean changeToUfo;
+      //  while (ingame){
         while (/*ingame &&*/ !player.isDying() /*&& game.*/ && ! game.isGameWon()) {
+
             if (player.isGameWon())
             {
                 game.nextLevel(player);
@@ -401,6 +403,8 @@ public class Board extends JPanel implements Runnable, Commons {
 
             beforeTime = System.currentTimeMillis();
         }
+        game.setScore(player);
+
         if(game.isGameWon()){
             message = "Game Won!!!!";
         }else {

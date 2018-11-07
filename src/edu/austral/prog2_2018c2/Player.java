@@ -2,6 +2,7 @@ package edu.austral.prog2_2018c2;
 
 
 import java.awt.event.KeyEvent;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 
@@ -16,6 +17,8 @@ public class Player extends Sprite implements Commons {
     private int shieldPercentage;
     private int shotsReceived;
     protected boolean gameWon;
+    Date date;
+
     public Player() {
 
         initPlayer();
@@ -172,6 +175,13 @@ public class Player extends Sprite implements Commons {
     public void nextLevel(){
         initShieldPercentage();
         substractShield();
+    }
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
 }
