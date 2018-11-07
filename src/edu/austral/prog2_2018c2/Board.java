@@ -58,8 +58,7 @@ public class Board extends JPanel implements Runnable, Commons {
         super.addNotify();
         gameInit();
     }
-    public void
-    initAliens(){
+    public void initAliens(){
 
         aliens = new ArrayList<>();
         Random rand = new Random();
@@ -89,13 +88,14 @@ public class Board extends JPanel implements Runnable, Commons {
         initAliens();
         player = new Player();
         shot = new Shot();
+
         game = new Game();
+
         if (animator == null || !ingame) {
 
             animator = new Thread(this);
             animator.start();
         }
-
     }
 
     public void drawAliens(Graphics g) {
@@ -193,16 +193,17 @@ public class Board extends JPanel implements Runnable, Commons {
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(message + "\n Score:" + player.getPoints() , (BOARD_WIDTH - metr.stringWidth(message)) / 2,
+        g.drawString(message, (BOARD_WIDTH - metr.stringWidth(message)) / 2,
                 BOARD_WIDTH / 2);
-        
+        g.drawString("Score:" + player.getPoints() , (BOARD_WIDTH - metr.stringWidth(message)) / 2,
+                BOARD_WIDTH / 3*2);
     }
 
 
     public void animationCycle() {
 
         if (deaths == NUMBER_OF_ALIENS_TO_DESTROY) {
-       //if (deaths == 3){
+        //if (deaths == 3){
 
             player.isGameWon(true);
             //ingame = false;
@@ -346,8 +347,8 @@ public class Board extends JPanel implements Runnable, Commons {
                 }
             }
         }
-        System.out.println("Cant escudos:" + player.getShield() + "; Porcentaje escudos: " + player.getShieldPercentage() +
-               "; Disparos recibidos:" + player.getShotsReceived() + "; Cant vidas:" +  player.getLives() + "; Nivel: " + game.getLevel());
+        // System.out.println("Cant escudos:" + player.getShield() + "; Porcentaje escudos: " + player.getShieldPercentage() +
+         //       "; Disparos recibidos:" + player.getShotsReceived() + "; Cant vidas:" +  player.getLives() + "; Nivel: " + game.getLevel());
     }
 
     @Override
@@ -360,9 +361,7 @@ public class Board extends JPanel implements Runnable, Commons {
         randomUfo = rand.nextInt((60-45)+1)+45;
         int numberOfTries;
         boolean changeToUfo;
-      //  while (ingame){
         while (/*ingame &&*/ !player.isDying() /*&& game.*/ && ! game.isGameWon()) {
-
             if (player.isGameWon())
             {
                 game.nextLevel(player);
@@ -403,8 +402,6 @@ public class Board extends JPanel implements Runnable, Commons {
 
             beforeTime = System.currentTimeMillis();
         }
-        game.setScore(player);
-
         if(game.isGameWon()){
             message = "Game Won!!!!";
         }else {

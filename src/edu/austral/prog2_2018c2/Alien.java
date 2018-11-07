@@ -61,10 +61,7 @@ public class Alien extends Sprite {
             return points;
         }
 
-
     }
-
-
 
     public class Bomb extends Sprite {
 

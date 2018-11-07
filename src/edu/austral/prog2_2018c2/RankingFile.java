@@ -15,7 +15,7 @@ import java.util.Scanner;
                 file.writeObject(score);
                 file.close();
             } catch (IOException ex) {
-ex.printStackTrace();
+                ex.printStackTrace();
             }
 
 
