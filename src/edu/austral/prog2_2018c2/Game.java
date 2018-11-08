@@ -50,5 +50,36 @@ public class Game implements Commons {
         score.setPlayer(player);
     }
 
+    public static class SpecialPower  extends Player {
+        private Alien.Bomb alienShot;
+        private boolean deadSum;
+        private int alienDeadCount = 0;
+        public int countingDeadAlien(){
+            for(;alienShot.isDestroyed() == true;){
+                alienDeadCount += 1;
+                if(alienDeadCount > 4){
+                    alienDeadCount = 0;
+                }
+            }
+            return alienDeadCount;
+        }
+        public boolean numberOfDeadAliens(){
+            if(countingDeadAlien() == 4){
+                return deadSum = true;
+            }else if(countingDeadAlien() < 4){
+                return deadSum = false;
+            }
+            return deadSum;
+        }
+        public void immunity(){
+            setDying(false);
+        }
+        public void freeze(){
+            Alien alienFreeze = new Alien(0,0);
+        }
+        public void doubleShot(){
+            Shot aTwoShot = new Shot(x + 2, y);
+        }
+    }
 }
 // hacer tablero y el escudo y reiniciar el juego

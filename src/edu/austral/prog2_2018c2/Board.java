@@ -20,10 +20,12 @@ public class Board extends JPanel implements Runnable, Commons {
 
     private Dimension d;
     private ArrayList<Alien> aliens;
+    private ArrayList<Shield>shields;
     private Player player;
     private Shot shot;
     private Game game;
-
+    private final int SHIELD_INIT_X = 50;
+    private final int SHIELD_INIT_Y = 30;
     private final int ALIEN_INIT_X = 150;
     private final int ALIEN_INIT_Y = 5;
     private int direction = -1;
@@ -40,7 +42,7 @@ public class Board extends JPanel implements Runnable, Commons {
 
         initBoard();
     }
-
+// aca menu
     private void initBoard() {
 
         addKeyListener(new TAdapter());
@@ -58,8 +60,7 @@ public class Board extends JPanel implements Runnable, Commons {
         super.addNotify();
         gameInit();
     }
-    public void
-    initAliens(){
+    public void initAliens(){
 
         aliens = new ArrayList<>();
         Random rand = new Random();
@@ -83,12 +84,22 @@ public class Board extends JPanel implements Runnable, Commons {
         }
 
     }
+    public void initShield(){
+
+        shields = new ArrayList<>();
+        for(int i = 1 ; i <= 4 ; i++){
+        Shield shield = new Shield(SHIELD_INIT_X+100*i,SHIELD_INIT_Y+240);
+        shields.add(shield);
+        }
+    }
+
 
     public void gameInit() {
 
         initAliens();
         player = new Player();
         shot = new Shot();
+        initShield();
         game = new Game();
         if (animator == null || !ingame) {
 
@@ -114,6 +125,20 @@ public class Board extends JPanel implements Runnable, Commons {
                 alien.die();
             }
         }
+    }
+    public void drawShield(Graphics g) {
+
+        Iterator<Shield> it = shields.iterator();
+      while (it.hasNext()){
+          Shield shield = it.next();
+          if(shield.isVisible()){
+              g.drawImage(shield.getImage(), shield.getX(), shield.getY(), this);
+          }
+          if(shield.isDying()){
+              shield.die();
+              it.remove();
+          }
+      }
     }
 
     public void drawPlayer(Graphics g) {
@@ -170,6 +195,7 @@ public class Board extends JPanel implements Runnable, Commons {
             drawPlayer(g);
             drawShot(g);
             drawBombing(g);
+            drawShield(g);
         }
 
         Toolkit.getDefaultToolkit().sync();
@@ -321,6 +347,24 @@ public class Board extends JPanel implements Runnable, Commons {
             int bombY = b.getY();
             int playerX = player.getX();
             int playerY = player.getY();
+            //int shieldX = shields.getX();
+            //int shieldY = shields.getY();
+            /*
+            for (int i = 0; i <shields.size() ; i++) {
+                if (shields.get(i).isVisible() && !b.isDestroyed()) {
+                    int shieldX = shields.get(i).getX();
+                    int shieldY = shields.get(i).getY();
+                    if (bombX >= (shieldX)
+                            && bombX <= (shieldX + SHIELD_WIDTH)
+                            && bombY >= (shieldY)
+                            && bombY <= (shieldY + SHIELD_HEIGHT)) {
+                        b.setDestroyed(true);
+                        shields.get(i).setLives(shields.get(i).getLives() - 1);
+                        b.setVisible(false);
+                    }
+                }
+            }
+            */
 
             if (player.isVisible() && !b.isDestroyed()) {
 
@@ -328,14 +372,14 @@ public class Board extends JPanel implements Runnable, Commons {
                         && bombX <= (playerX + PLAYER_WIDTH)
                         && bombY >= (playerY)
                         && bombY <= (playerY + PLAYER_HEIGHT)) {
-                    ImageIcon ii
-                            = new ImageIcon(explImg);
-                  //  player.setImage(ii.getImage());
-                    player.setDying(true);
+                ImageIcon ii
+                        = new ImageIcon(explImg);
+                //  player.setImage(ii.getImage());
+                player.setDying(true);
 
-                    b.setDestroyed(true);
-                }
+                b.setDestroyed(true);
             }
+        }
 
             if (!b.isDestroyed()) {
 
@@ -346,8 +390,8 @@ public class Board extends JPanel implements Runnable, Commons {
                 }
             }
         }
-        System.out.println("Cant escudos:" + player.getShield() + "; Porcentaje escudos: " + player.getShieldPercentage() +
-               "; Disparos recibidos:" + player.getShotsReceived() + "; Cant vidas:" +  player.getLives() + "; Nivel: " + game.getLevel());
+       // System.out.println("Cant escudos:" + player.getShield() + "; Porcentaje escudos: " + player.getShieldPercentage() +
+         //      "; Disparos recibidos:" + player.getShotsReceived() + "; Cant vidas:" +  player.getLives() + "; Nivel: " + game.getLevel());
     }
 
     @Override
