@@ -9,6 +9,7 @@ public class Alien extends Sprite {
     private Bomb bomb;
     protected String alienImg = "src/images/alien.png";
     protected String ufoImg = "src/images/UfoAlien.png";
+    public int vida;
     public Alien(int x, int y) {
 
         initAlien(x, y);

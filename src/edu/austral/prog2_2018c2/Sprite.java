@@ -51,7 +51,7 @@ public class Sprite {
         this.y = y;
     }
 
-    public int getY() {
+    public  int getY() {
 
         return y;
     }
