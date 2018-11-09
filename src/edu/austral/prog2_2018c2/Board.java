@@ -22,7 +22,7 @@ public class Board extends JPanel implements Runnable, Commons {
     private final int SHIELD_INIT_X = 50;
     private final int SHIELD_INIT_Y = 30;
     private final int ALIEN_INIT_X = 150;
-    private final int ALIEN_INIT_Y = 5;
+    private final int ALIEN_INIT_Y = 32;
     private int direction = -1;
     private int deaths = 0;
     private Menu menu;
@@ -84,13 +84,13 @@ public class Board extends JPanel implements Runnable, Commons {
                 Alien alien;
 
                 switch (typeOfAlien){
-                    case 1 :   alien = new SmallAlien(ALIEN_INIT_X + 18 * j, ALIEN_INIT_Y + 18 * i);
+                    case 1 :   alien = new SmallAlien(ALIEN_INIT_X + 50 * j, ALIEN_INIT_Y + 30 * i);
                         break;
-                    case 2 :   alien = new MediumAlien(ALIEN_INIT_X + 18 * j, ALIEN_INIT_Y + 18 * i);
+                    case 2 :   alien = new MediumAlien(ALIEN_INIT_X + 50 * j, ALIEN_INIT_Y + 30 * i);
                         break;
-                    case 3 :  alien = new BigAlien(ALIEN_INIT_X + 18 * j, ALIEN_INIT_Y + 18 * i);
+                    case 3 :  alien = new BigAlien(ALIEN_INIT_X + 50 * j, ALIEN_INIT_Y + 30 * i);
                         break;
-                    default: alien = new SmallAlien(ALIEN_INIT_X + 18 * j, ALIEN_INIT_Y + 18 * i);
+                    default: alien = new SmallAlien(ALIEN_INIT_X + 50 * j, ALIEN_INIT_Y + 30 * i);
                 }
 
                 aliens.add(alien);
@@ -238,17 +238,22 @@ public class Board extends JPanel implements Runnable, Commons {
         g.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
         g.setColor(new Color(0, 32, 48));
-        g.fillRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 50);
+        g.fillRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 75);
         g.setColor(Color.white);
-        g.drawRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 50);
+        g.drawRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 75);
 
         Font small = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics metr = this.getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(message + "\n Score:" + player.getPoints() , (BOARD_WIDTH - metr.stringWidth(message)) / 2,
+        g.drawString(message , (BOARD_WIDTH - metr.stringWidth(message)) / 2,
                 BOARD_WIDTH / 2);
+        g.drawString("Score: " + player.getPoints() , (BOARD_WIDTH - metr.stringWidth("Score: " + player.getPoints())) / 2,
+                BOARD_WIDTH / 2 + 25);
+
+
+
 
     }
 
@@ -256,7 +261,7 @@ public class Board extends JPanel implements Runnable, Commons {
     public void animationCycle() {
         if (State == STATE.GAME) {
             if (deaths == NUMBER_OF_ALIENS_TO_DESTROY) {
-                //if (deaths == 3){
+            //   if (deaths == 3){
 
                 player.isGameWon(true);
                 //ingame = false;
@@ -477,7 +482,7 @@ public class Board extends JPanel implements Runnable, Commons {
 
             beforeTime = System.currentTimeMillis();
         }
-        game.setScore(player);
+        // game.setScore(player);
 
         if(game.isGameWon()){
             message = "Game Won!!!!";
