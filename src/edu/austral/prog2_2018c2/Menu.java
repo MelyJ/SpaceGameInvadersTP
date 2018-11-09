@@ -1,34 +1,34 @@
 package edu.austral.prog2_2018c2;
 
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.*;
 
-public class Menu extends JFrame implements ItemListener{
+public class Menu{
 
-    JComboBox menu;
+    public Rectangle playButton = new Rectangle(Game.BOARD_WIDTH / 2 - 39  , 200, 100, 50 );
+    public Rectangle rankingButton = new Rectangle(Game.BOARD_WIDTH / 2 - 39, 300, 100, 50 );
+    public Rectangle quitButton = new Rectangle(Game.BOARD_WIDTH / 2 - 39, 400, 100, 50 );
 
-    Menu(){
-        setSize(300,250);
-        setLayout(null);
-        menu = new JComboBox();
-        menu.setBounds(90,40,125,20);
-        menu.addItem("Jugar");
-        menu.addItem("Ranking");
-        add(menu);
-        menu.addItemListener(this);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
+
+    public void render (Graphics g){
+
+        Graphics2D g2D = (Graphics2D) g;
+
+        Font fnt0= new Font("arial", Font.BOLD, 50);
+        g.setFont(fnt0);
+        g.setColor(Color.green);
+        g.drawString("SPACE INVADERS", 120 , 130);
+
+        Font fnt1= new Font("arial", Font.BOLD, 20);
+        g.setFont(fnt1);
+        g.setColor(Color.white);
+
+
+        ((Graphics2D) g).drawString("Play", playButton.x + 29 , playButton.y + 33);
+        g2D.draw(playButton);
+        ((Graphics2D) g).drawString("Ranking", rankingButton.x + 12 , rankingButton.y + 33);
+        g2D.draw(rankingButton);
+        ((Graphics2D) g).drawString("Quit", quitButton.x + 29 , quitButton.y + 33);
+        g2D.draw(quitButton);
     }
 
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        if (e.getSource() == menu){
-            setTitle((String)menu.getSelectedItem());
-        }
-    }
-
-    public static void main (String [] args){
-        new Menu();
-    }
 }
