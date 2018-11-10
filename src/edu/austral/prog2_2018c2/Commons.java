@@ -3,10 +3,10 @@ package edu.austral.prog2_2018c2;
 public interface Commons {
     public static final int BOARD_WIDTH = 658;
     public static final int BOARD_HEIGHT = 650;
-    public static final int GROUND = 290;
+    public static final int GROUND = 390;
     public static final int BOMB_HEIGHT = 5;
-    public static final int ALIEN_HEIGHT = 12;
-    public static final int ALIEN_WIDTH = 12;
+    public static final int ALIEN_HEIGHT = 36;
+    public static final int ALIEN_WIDTH = 36;
     public static final int BORDER_RIGHT = 30;
     public static final int BORDER_LEFT = 5;
     public static final int GO_DOWN = 15;

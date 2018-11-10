@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 
 public class Player extends Sprite implements Commons {
     private  int points;
-    private final int START_Y = 280;
+    private final int START_Y = 380;
     private final int START_X = 270;
     public int lives=3;
     private final String playerImg = "src/images/player.png";
@@ -145,7 +145,7 @@ public class Player extends Sprite implements Commons {
             shieldPercentage = shieldPercentage - 10;
             if (getShieldPercentage() <= 0) {
 
-                initShieldPercentage();
+                //initShieldPercentage();
                 substractShield();
 
             }

@@ -15,14 +15,14 @@ public class Board extends JPanel implements Runnable, Commons {
 
     private Dimension d;
     private ArrayList<Alien> aliens;
-//    private ArrayList<Shield>shields;
+    //    private ArrayList<Shield>shields;
     private Player player;
     private Shot shot;
     private Game game;
     private final int SHIELD_INIT_X = 50;
     private final int SHIELD_INIT_Y = 30;
     private final int ALIEN_INIT_X = 150;
-    private final int ALIEN_INIT_Y = 32;
+    private final int ALIEN_INIT_Y = 5;
     private int direction = -1;
     private int deaths = 0;
     private Menu menu;
@@ -99,7 +99,6 @@ public class Board extends JPanel implements Runnable, Commons {
 
     }
     /*public void initShield(){
-
         shields = new ArrayList<>();
         for(int i = 1 ; i <= 4 ; i++){
             Shield shield = new Shield(SHIELD_INIT_X+100*i,SHIELD_INIT_Y+240);
@@ -141,7 +140,6 @@ public class Board extends JPanel implements Runnable, Commons {
         }
     }
     /*public void drawShield(Graphics g) {
-
         Iterator<Shield> it = shields.iterator();
         while (it.hasNext()){
             Shield shield = it.next();
@@ -238,22 +236,17 @@ public class Board extends JPanel implements Runnable, Commons {
         g.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
         g.setColor(new Color(0, 32, 48));
-        g.fillRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 75);
+        g.fillRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 70);
         g.setColor(Color.white);
-        g.drawRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 75);
+        g.drawRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 70);
 
         Font small = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics metr = this.getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(message , (BOARD_WIDTH - metr.stringWidth(message)) / 2,
-                BOARD_WIDTH / 2);
-        g.drawString("Score: " + player.getPoints() , (BOARD_WIDTH - metr.stringWidth("Score: " + player.getPoints())) / 2,
-                BOARD_WIDTH / 2 + 25);
-
-
-
+        g.drawString(message, (BOARD_WIDTH - metr.stringWidth(message)) / 2, BOARD_WIDTH / 2);
+        g.drawString("Score: " + player.getPoints() , (BOARD_WIDTH - metr.stringWidth("Score: " + player.getPoints())) / 2, BOARD_WIDTH / 2 + 20);
 
     }
 
@@ -261,7 +254,7 @@ public class Board extends JPanel implements Runnable, Commons {
     public void animationCycle() {
         if (State == STATE.GAME) {
             if (deaths == NUMBER_OF_ALIENS_TO_DESTROY) {
-            //   if (deaths == 3){
+                //if (deaths == 3){
 
                 player.isGameWon(true);
                 //ingame = false;
@@ -482,7 +475,7 @@ public class Board extends JPanel implements Runnable, Commons {
 
             beforeTime = System.currentTimeMillis();
         }
-        // game.setScore(player);
+        //game.setScore(player);
 
         if(game.isGameWon()){
             message = "Game Won!!!!";
