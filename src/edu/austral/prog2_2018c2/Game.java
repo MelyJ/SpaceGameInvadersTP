@@ -6,6 +6,7 @@ public class Game implements Commons {
     private final int  maxLevel = 5;
     protected  boolean invasion ;
     protected Score score;
+    public Shield shield;
 
     public Game() {
         level = 1;
@@ -15,8 +16,9 @@ public class Game implements Commons {
 
     public void nextLevel(Player player){
         level++;
-        player.nextLevel();
         player.isGameWon(false);
+        //shield.nextLevel();
+
     }
 
     public int getLevel() {
@@ -33,7 +35,7 @@ public class Game implements Commons {
     }
 
     public long getInvadersVelocity(Long timeDiff){
-       return DELAY - timeDiff-level*2;
+        return DELAY - timeDiff-level*2;
 
     }
 
@@ -47,15 +49,15 @@ public class Game implements Commons {
         return  invasion;
     }
     public  void setScore(Player player){
-        score.setPlayer(player);
+//        score.setPlayer(player);
     }
 
-    public static class SpecialPower  extends Player {
+    public static class SpecialPower extends Player {
         private Alien.Bomb alienShot;
         private boolean deadSum;
         private int alienDeadCount = 0;
         public int countingDeadAlien(){
-            for(;alienShot.isDestroyed() == true;){
+            for(;alienShot.isDestroyed();){
                 alienDeadCount += 1;
                 if(alienDeadCount > 4){
                     alienDeadCount = 0;
@@ -82,4 +84,3 @@ public class Game implements Commons {
         }
     }
 }
-// hacer tablero y el escudo y reiniciar el juego

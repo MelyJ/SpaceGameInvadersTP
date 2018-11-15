@@ -2,20 +2,32 @@ package edu.austral.prog2_2018c2;
 
 
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
+// pq serializable??
 
-public class Player extends Sprite implements Commons {
+public class Player extends Sprite implements Commons, Serializable {
     private  int points;
     private final int START_Y = 380;
     private final int START_X = 270;
     public int lives=3;
     private final String playerImg = "src/images/player.png";
     private int width;
-    private int shield;
-    private int shieldPercentage;
-    private int shotsReceived;
+    int damage = 1;
+    int energy; //Acumula hasta 3 y activa poder
+
+    Timer timer;
+    TimerTask task0;
+
+    boolean hasSkill= false;
+    boolean doubleDamage =false;
+    boolean inmune= false;
+    boolean freeze= false;
     protected boolean gameWon;
     Date date;
 
@@ -24,11 +36,10 @@ public class Player extends Sprite implements Commons {
         initPlayer();
     }
 
+
     private void initPlayer() {
         gameWon = false;
 
-        shield = 4;
-        initShieldPercentage();
         ImageIcon ii = new ImageIcon(playerImg);
         width = ii.getImage().getWidth(null);
         points = 0;
@@ -37,38 +48,36 @@ public class Player extends Sprite implements Commons {
         setY(START_Y);
     }
 
-    public void initShieldPercentage(){
-        shieldPercentage = 100;
-    }
-
-    public void setShield(int shield){
-
-        this.shield = shield;
-    }
-
-    public int getShield(){
-        return shield;
-
-    }
-
-    public int getShieldPercentage(){
-        return shieldPercentage;
-    }
-
-    public void setShieldPercentage(int shieldPercentage){
-        this.shieldPercentage = shieldPercentage;
-    }
-
-    public void setLives(int lives){
-        this.lives= lives;
-    }
-
     public int getLives() {
         return lives;
     }
 
-    public void substractLives(){
-        lives = lives-1;
+
+    public void activatePower(){
+        //Agregrar condicional, solo UNO a la vez
+        Random a= new Random();
+        int b= a.nextInt(100);
+        if(b>70 && b<=90){
+            inmune=true;
+            hasSkill= true;
+            energy=0;
+        }
+        else if(b<=70){
+            doubleDamage =true;
+            hasSkill= true;
+            energy=0;
+        }
+        task0= new TimerTask() {
+            @Override
+            public void run() {
+                doubleDamage =false;
+                inmune=false;
+                hasSkill= false;
+                cancel();
+            }
+        };
+        timer= new Timer();
+        timer.schedule(task0,5000);
     }
 
     public void act() {
@@ -128,41 +137,6 @@ public class Player extends Sprite implements Commons {
 
     }
 
-    public int getShotsReceived() {
-        return shotsReceived;
-    }
-
-    @Override
-    public void setDying(boolean dying) {
-        shotsReceived += 1;
-
-        if (getShield() <= 0) {
-            substractLives();
-        }
-
-        if (shotsReceived >= 5) {
-            shotsReceived = 0;
-            shieldPercentage = shieldPercentage - 10;
-            if (getShieldPercentage() <= 0) {
-
-                //initShieldPercentage();
-                substractShield();
-
-            }
-        }
-
-
-        if (getLives() <= 0) {
-            super.setDying(true);
-        }
-
-    }
-
-    public void substractShield(){
-        shield = shield -1;
-
-
-    }
     public boolean isGameWon(){
         return gameWon;
     }
@@ -172,10 +146,6 @@ public class Player extends Sprite implements Commons {
 
     }
 
-    public void nextLevel(){
-        initShieldPercentage();
-        substractShield();
-    }
     public Date getDate() {
         return date;
     }

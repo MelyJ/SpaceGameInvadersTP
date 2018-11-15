@@ -8,21 +8,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class Board extends JPanel implements Runnable, Commons {
 
     private Dimension d;
     private ArrayList<Alien> aliens;
-    //    private ArrayList<Shield>shields;
+    private ArrayList<Shield>shields;
     private Player player;
     private Shot shot;
     private Game game;
     private final int SHIELD_INIT_X = 50;
     private final int SHIELD_INIT_Y = 30;
     private final int ALIEN_INIT_X = 150;
-    private final int ALIEN_INIT_Y = 5;
+    private final int ALIEN_INIT_Y = 32;
     private int direction = -1;
     private int deaths = 0;
     private Menu menu;
@@ -36,32 +35,39 @@ public class Board extends JPanel implements Runnable, Commons {
     public Rectangle menuButton = new Rectangle(3 , 3, 85, 10);
 
 
+    //inicializamos el board
     public Board() {
-        menu = new Menu();
         initBoard();
     }
 
+    //usamos enum para crear las opciones del juego(4 diferentes estados que se comportan diferente)
     public static enum STATE {
         MENU,
+        GAME_MENU,
         GAME,
         RANKING
     };
 
+    //empieza en modo menu, por lo tanto, va a comenzar mostrando el menu
     public static STATE State = STATE.MENU;
 
 
-
-    private void initBoard() {
+    protected void initBoard() {
         addKeyListener(new TAdapter());
         addMouseListener(new MouseInput());
         setFocusable(true);
         d = new Dimension(BOARD_WIDTH, BOARD_HEIGHT);
         setBackground(Color.red);
+        //Crea una instancia del menu
+        menu = new Menu();
 
+        //Diferencia con el if, entre in game o no. Si esta en modo Game ejecuta el juego, en cambio si esta en menu establece el color del fondo
         if (State == STATE.GAME) {
+
             gameInit();
             setDoubleBuffered(true);
         }
+
         else if (State == STATE.MENU){
             setBackground(Color.black);
         }
@@ -74,6 +80,7 @@ public class Board extends JPanel implements Runnable, Commons {
         super.addNotify();
         gameInit();
     }
+
     public void initAliens(){
 
         aliens = new ArrayList<>();
@@ -82,7 +89,7 @@ public class Board extends JPanel implements Runnable, Commons {
             for (int j = 0; j < 6; j++) {
                 int typeOfAlien=  rand.nextInt(3)+1;
                 Alien alien;
-
+                // como hay 3 tipos diferentes de aliens, creamos un random para ubicarlos aleatoriamente y usamos un switch para cada caso.
                 switch (typeOfAlien){
                     case 1 :   alien = new SmallAlien(ALIEN_INIT_X + 50 * j, ALIEN_INIT_Y + 30 * i);
                         break;
@@ -98,21 +105,21 @@ public class Board extends JPanel implements Runnable, Commons {
         }
 
     }
-    /*public void initShield(){
+    //creamos un arrayList de escudos, lo instaciamos y agregamos los distintos 4 escudos a la lista .
+    public void initShield(){
         shields = new ArrayList<>();
         for(int i = 1 ; i <= 4 ; i++){
-            Shield shield = new Shield(SHIELD_INIT_X+100*i,SHIELD_INIT_Y+240);
+            Shield shield = new Shield(SHIELD_INIT_X+100*i,SHIELD_INIT_Y+290);
             shields.add(shield);
         }
-    }*/
-
+    }
 
     public void gameInit() {
 
         initAliens();
         player = new Player();
         shot = new Shot();
-        //initShield();
+        initShield();
         game = new Game();
         if (animator == null || !ingame) {
 
@@ -139,7 +146,9 @@ public class Board extends JPanel implements Runnable, Commons {
             }
         }
     }
-    /*public void drawShield(Graphics g) {
+
+    //dibuja los escudos
+    public void drawShield(Graphics g) {
         Iterator<Shield> it = shields.iterator();
         while (it.hasNext()){
             Shield shield = it.next();
@@ -151,7 +160,7 @@ public class Board extends JPanel implements Runnable, Commons {
                 it.remove();
             }
         }
-    }*/
+    }
 
     public void drawPlayer(Graphics g) {
 
@@ -163,6 +172,7 @@ public class Board extends JPanel implements Runnable, Commons {
         if (player.isDying()) {
 
             player.die();
+
             ingame = false;
 
         }
@@ -191,6 +201,7 @@ public class Board extends JPanel implements Runnable, Commons {
 
     @Override
     public void paintComponent(Graphics g) {
+
         if (State == STATE.GAME) {
 
             super.paintComponent(g);
@@ -202,27 +213,34 @@ public class Board extends JPanel implements Runnable, Commons {
             if (ingame) {
 
                 g.drawLine(0, GROUND, BOARD_WIDTH, GROUND);
-                g.drawString("Lives:" + player.getLives(), 5, 30);
-                g.drawString("Score:" + player.getPoints(), 280, 30);
-                g.drawString("Level:" + game.getLevel(), 580, 30);
+                //aparace en pantalla vidas, ptos, nivel, nivel de energia y si hay un special power enabled.
+                g.drawString("Lives: " + player.lives, 5, 30);
+                g.drawString("Score: " + player.getPoints(), 280, 30);
+                g.drawString("Level: " + game.getLevel(), 580, 30);
+                g.drawString("Energy: " + player.energy, 5, 60);
+                if (player.hasSkill) g.drawString("Special Power activated", 5, 90);
+
                 drawAliens(g);
                 drawPlayer(g);
                 drawShot(g);
                 drawBombing(g);
-                //  drawShield(g);
-
+                drawShield(g);
+                // Crea lo que aparece dentro del menuButton. Al tocarlo pausa el juego y aparace un nuevo menu con distintas opciones.
                 Font fnt1= new Font("Helvetica", Font.BOLD, 8);
                 g.setFont(fnt1);
                 g.setColor(Color.white);
                 Graphics2D g2D = (Graphics2D) g;
                 ((Graphics2D) g).drawString("BACK TO MENU", menuButton.x + 10 , menuButton.y + 8);
                 g2D.draw(menuButton);
+
             }
 
             Toolkit.getDefaultToolkit().sync();
             g.dispose();
+
         }
-        else if (State == STATE.MENU){
+        //si el juego esta en estado menu, aparece el mismo en pantalla.
+        if (State == STATE.MENU || State == STATE.GAME_MENU){
             menu.render(g);
         }
 
@@ -230,31 +248,52 @@ public class Board extends JPanel implements Runnable, Commons {
 
     public void gameOver() {
 
-        Graphics g = this.getGraphics();
 
-        g.setColor(Color.black);
-        g.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+           Graphics g = this.getGraphics();
 
-        g.setColor(new Color(0, 32, 48));
-        g.fillRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 70);
-        g.setColor(Color.white);
-        g.drawRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 70);
+           g.setColor(Color.black);
+           g.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
-        Font small = new Font("Helvetica", Font.BOLD, 14);
-        FontMetrics metr = this.getFontMetrics(small);
+           g.setColor(new Color(0, 32, 48));
+           g.fillRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 70);
+           g.setColor(Color.white);
+           g.drawRect(50, BOARD_WIDTH / 2 - 30, BOARD_WIDTH - 100, 70);
 
-        g.setColor(Color.white);
-        g.setFont(small);
-        g.drawString(message, (BOARD_WIDTH - metr.stringWidth(message)) / 2, BOARD_WIDTH / 2);
-        g.drawString("Score: " + player.getPoints() , (BOARD_WIDTH - metr.stringWidth("Score: " + player.getPoints())) / 2, BOARD_WIDTH / 2 + 20);
+
+           Font small = new Font("Helvetica", Font.BOLD, 14);
+           FontMetrics metr = this.getFontMetrics(small);
+
+           g.setColor(Color.white);
+           g.setFont(small);
+           //Muestra por pantalla alguno de los tres mensajes posibles, de porque acabo el juego: "GAME WON" "GAME OVER" "INVASION". Muestra los puntos alcanzado en la partida.
+           g.drawString(message, (BOARD_WIDTH - metr.stringWidth(message)) / 2, BOARD_WIDTH / 2);
+           g.drawString("Score: " + player.getPoints(), (BOARD_WIDTH - metr.stringWidth("Score: " + player.getPoints())) / 2, BOARD_WIDTH / 2 + 20);
+
+           //sleep para que muestre por 3000 milisegundos lo anterior. Al acabar ese tiempo, pide el nombre del usuario y el sistema salga .exit(0) con estado 0
+           try {
+               Thread.sleep(3000);
+           } catch (InterruptedException e) {
+               System.out.println("interrupted");
+           }
+
+           String userName = JOptionPane.showInputDialog("User name: ");
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println("interrupted");
+            }
+
+           System.exit(0);
+
+
 
     }
-
 
     public void animationCycle() {
         if (State == STATE.GAME) {
             if (deaths == NUMBER_OF_ALIENS_TO_DESTROY) {
-                //if (deaths == 3){
+            //    if (deaths == 3){
 
                 player.isGameWon(true);
                 //ingame = false;
@@ -275,19 +314,37 @@ public class Board extends JPanel implements Runnable, Commons {
 
                     int alienX = alien.getX();
                     int alienY = alien.getY();
-
+                    //si el disparo esta en el mismo lugar que el alien, resta vidas
                     if (alien.isVisible() && shot.isVisible()) {
                         if (shotX >= (alienX)
                                 && shotX <= (alienX + ALIEN_WIDTH)
                                 && shotY >= (alienY)
                                 && shotY <= (alienY + ALIEN_HEIGHT)) {
-                            ImageIcon ii
-                                    = new ImageIcon(explImg);
-                            alien.setImage(ii.getImage());
-                            alien.setDying(true);
-                            deaths++;
-                            player.addPoints(alien.getPoints());
+
+
+                            alien.life -= 1;
+                            if (alien.life == 0) {
+                                //si las vidas =  el alien muere y agrega ptos al player.
+                                ImageIcon ii = new ImageIcon(explImg);
+                                alien.setImage(ii.getImage());
+                                alien.setDying(true);
+                                deaths++;
+                                player.addPoints(alien.getPoints());
+
+                            }
+
                             shot.die();
+
+                            player.energy++;
+                            if (player.energy == 10){
+                                player.activatePower();
+                            }
+                            if (!player.doubleDamage){
+                                alien.life -= player.damage;
+                            }
+                            else{
+                                alien.life -= player.damage*2;
+                            }
                         }
                     }
                 }
@@ -310,6 +367,7 @@ public class Board extends JPanel implements Runnable, Commons {
                 int x = alien.getX();
 
                 if (x >= BOARD_WIDTH - BORDER_RIGHT && direction != -1) {
+                //Moviento de los aliens. (de que lado esta)
 
                     direction = -1;
                     Iterator i1 = aliens.iterator();
@@ -334,7 +392,7 @@ public class Board extends JPanel implements Runnable, Commons {
                     }
                 }
             }
-
+            // recorre la lista, si existe y esta en la misma linea del piso "invasion" y fin del juego.
             Iterator it = aliens.iterator();
 
             while (it.hasNext()) {
@@ -359,7 +417,7 @@ public class Board extends JPanel implements Runnable, Commons {
             Random generator = new Random();
 
             for (Alien alien : aliens) {
-
+            // tira de forma random las bombas
                 int shot = generator.nextInt(game.getshotFrecuency());
                 Alien.Bomb b = alien.getBomb();
 
@@ -374,24 +432,27 @@ public class Board extends JPanel implements Runnable, Commons {
                 int bombY = b.getY();
                 int playerX = player.getX();
                 int playerY = player.getY();
-                //int shieldX = shields.getX();
-                //int shieldY = shields.getY();
-            /*
-            for (int i = 0; i <shields.size() ; i++) {
-                if (shields.get(i).isVisible() && !b.isDestroyed()) {
-                    int shieldX = shields.get(i).getX();
-                    int shieldY = shields.get(i).getY();
-                    if (bombX >= (shieldX)
-                            && bombX <= (shieldX + SHIELD_WIDTH)
-                            && bombY >= (shieldY)
-                            && bombY <= (shieldY + SHIELD_HEIGHT)) {
-                        b.setDestroyed(true);
-                        shields.get(i).setLives(shields.get(i).getLives() - 1);
-                        b.setVisible(false);
+
+                //Recorre la lista de los shields y si la bomba esta en la misma posicion que el shield, el mismo muere
+                for (Shield shield: shields){
+                    int shieldX= shield.getX();
+                    int shieldY= shield.getY();
+
+                    if(shield.isVisible() && !b.isDestroyed() ){
+                        if (bombX >= (shieldX)
+                                && bombX <= (shieldX + SHIELD_WIDTH)
+                                && bombY >= (shieldY - SHIELD_HEIGHT)
+                                && bombY <= (shieldY + SHIELD_HEIGHT)) {
+                            shield.substractLives();
+                            b.setDestroyed(true);
+                            b.setVisible(false);
+
+
+                        }
                     }
+
+
                 }
-            }
-            */
 
                 if (player.isVisible() && !b.isDestroyed()) {
 
@@ -399,12 +460,19 @@ public class Board extends JPanel implements Runnable, Commons {
                             && bombX <= (playerX + PLAYER_WIDTH)
                             && bombY >= (playerY)
                             && bombY <= (playerY + PLAYER_HEIGHT)) {
-                        ImageIcon ii
-                                = new ImageIcon(explImg);
-                        //  player.setImage(ii.getImage());
-                        player.setDying(true);
 
-                        b.setDestroyed(true);
+                       if(player.getLives() <= 3){
+                           player.lives --;
+                           b.setDestroyed(true);
+                       }
+
+                       if(player.getLives() == 0) {
+                           ImageIcon ii = new ImageIcon(explImg);
+                           //  player.setImage(ii.getImage());
+                           player.setDying(true);
+
+                           b.setDestroyed(true);
+                       }
                     }
                 }
 
@@ -417,15 +485,15 @@ public class Board extends JPanel implements Runnable, Commons {
                     }
                 }
             }
-            // System.out.println("Cant escudos:" + player.getShield() + "; Porcentaje escudos: " + player.getShieldPercentage() +
-            //      "; Disparos recibidos:" + player.getShotsReceived() + "; Cant vidas:" +  player.getLives() + "; Nivel: " + game.getLevel());
+            //System.out.println("Cant vidas:" +  player.getLives() + "; Nivel: " + game.getLevel());
         }
     }
 
     @Override
     public void run() {
-
-        long beforeTime, timeDiff, sleep,beforeTimeUfo,randomUfo;
+        // viene de la implementacion de runnable,
+        // QUE ES RUNNABLE??
+        long beforeTime, timeDiff, sleep, beforeTimeUfo,randomUfo;
         beforeTimeUfo = System.currentTimeMillis();
         beforeTime = System.currentTimeMillis();
         Random rand = new Random();
@@ -451,22 +519,24 @@ public class Board extends JPanel implements Runnable, Commons {
                 sleep = 2;
             }
             if( System.currentTimeMillis() >= beforeTimeUfo+randomUfo * 1000  ){
-
+            // si el tiempo de juego es mayor a 45 a 60 seg aparece un ufo, multiplicamos por 1000 pq esta en milisegundos
                 changeToUfo = false;
                 beforeTimeUfo = System.currentTimeMillis();
                 randomUfo = rand.nextInt((60-45)+1)+45;
                 numberOfTries = 0;
-                while (!changeToUfo && numberOfTries < 5)
-                {
+                while (!changeToUfo && numberOfTries < 5) {
+                    //<5 para evitar que entre en un loop
                     alienAux = aliens.get(rand.nextInt((23)+1));
 
                     if(!alienAux.isUfo()){
                         alienAux.setUfo(true);
                         changeToUfo = true;
                     }
+                    // agarra un alien random y si no es ufo, lo convierte.
                     numberOfTries++;
                 }
             }
+            //PAUSA
             try {
                 Thread.sleep(sleep);
             } catch (InterruptedException e) {
@@ -475,7 +545,8 @@ public class Board extends JPanel implements Runnable, Commons {
 
             beforeTime = System.currentTimeMillis();
         }
-        //game.setScore(player);
+
+//        game.setScore(player);
 
         if(game.isGameWon()){
             message = "Game Won!!!!";

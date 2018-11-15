@@ -9,7 +9,9 @@ public class Alien extends Sprite {
     private Bomb bomb;
     protected String alienImg = "src/images/alien.png";
     protected String ufoImg = "src/images/UfoAlien.png";
-    public int vida;
+    public int life;
+
+
     public Alien(int x, int y) {
 
         initAlien(x, y);
@@ -21,6 +23,7 @@ public class Alien extends Sprite {
         this.x = x;
         this.y = y;
         bomb = new Bomb(x, y);
+
         this.points = 10;
         setImageAlien();
     }
@@ -53,6 +56,7 @@ public class Alien extends Sprite {
 
         return bomb;
     }
+    // cuando matamos a un ufo, de firma ranom nos devuelve el puntaje entre 300 y 50 ptos.
     public int getPoints(){
         if(ufo){
             Random rand = new Random();
@@ -64,6 +68,7 @@ public class Alien extends Sprite {
 
     }
 
+// pq esta esta clase anonima??
     public class Bomb extends Sprite {
 
         private final String bombImg = "src/images/bomb.png";
